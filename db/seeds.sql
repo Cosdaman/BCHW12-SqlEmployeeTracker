@@ -1,13 +1,16 @@
-INSERT INTO department (dept_name)
-VALUES ("Engineering"),
-       ("Construction"),
-       ("Programming");
+INSERT INTO
+    department (dept_name)
+VALUES
+    ("Engineering"),
+    ("Construction"),
+    ("Programming");
 
-INSERT INTO roles (title, salary, department_id)
-VALUES ("The Great Gatsby", true, 1),
-       ("Huckleberry Finn", true, 3),
-       ("100 Years of Solitude", false, 5),
-       ("Things Fall Apart", false, 1),
-       ("Crime and Punishment", true, 2),
-       ("Moby Dick", true, 4),
-       ("Decameron", false, 1);
+INSERT INTO
+    roles (title, salary, department_id)
+VALUES
+    ("Electrical Engineer", 20000, 1),
+    ("Civil Engineer", 30000, 1),
+    ("Mechanical Operator", 15000, 2),
+    ("Safety Officer", 20000, 2),
+    ("Javascript Developer", 40000, 3),
+    ("Full Stack Developer", 50000, 3);
