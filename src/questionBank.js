@@ -3,7 +3,7 @@ const mainMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'mainMenu',
-    choices: ["View", "Add", "Update"]
+    choices: ["View", "Add", "Update", "Quit"]
 }]
 
 const viewMenu = [{
