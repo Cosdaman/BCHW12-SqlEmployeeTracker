@@ -15,7 +15,6 @@ app.use(express.json());
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        // MySQL username,
         user: 'root',
         // TODO: Add MySQL password
         password: '',
@@ -23,6 +22,7 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the books_db database.`)
 );
+
 //inquirer menus and branching menus
 function mainMenuInq() {
     inquirer.prompt(questionBank.mainMenu)
@@ -40,6 +40,9 @@ function mainMenuInq() {
                     case 'Update':
                         updateMenuInq();
                         break;
+
+                        case 'Quit':
+                            break;
                 }
             })
         .catch(
