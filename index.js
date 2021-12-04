@@ -62,17 +62,15 @@ function viewMenuInq() {
             (response) => {
                 switch (response.viewMenu) {
                     case 'View All Departments':
-                        viewDept();
+                        viewDB('SELECT * FROM department ORDER BY id;');
                         break;
 
                     case 'View All Roles':
-                        viewRole();
+                        viewDB('SELECT roles.title,roles.id,department.dept_name,roles.salary FROM roles LEFT JOIN department ON department.id = roles.department_id ORDER BY roles.id ;');
                         break;
 
                     case 'View All Employees':
-                        db.query('SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,\',\',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;', function (err, results) {
-                            console.table(results);
-                        });
+                        viewDB(`SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,\',\',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;`)
                         break;
                 }
             })
@@ -166,18 +164,24 @@ function addRoleInq() {
             })
 }
 
-async function viewDept() {
-    await db.promise().query('SELECT * FROM department ORDER BY id;').then((results) => {
+
+
+async function viewEmployee() {
+    await db.promise().query().then((results) => {
         console.table(results[0])
     });
     mainMenuInq();
 }
 
-async function viewRole() {
-    await db.promise().query('SELECT roles.title,roles.id,department.dept_name,roles.salary FROM roles LEFT JOIN department ON department.id = roles.department_id ORDER BY roles.id ;').then((results) => {
+async function viewDB(dbQuery) {
+    await db.promise().query(dbQuery).then((results) => {
         console.table(results[0])
     });
     mainMenuInq();
 }
+
+
+
+
 
 mainMenuInq();
