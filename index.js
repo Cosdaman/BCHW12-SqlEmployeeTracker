@@ -4,25 +4,25 @@ const inquirer = require('inquirer');
 const questionBank = require("./src/questionBank")
 
 //express 
-// const express = require('express');
-// const PORT = process.env.PORT || 3001;
-// const app = express();
+const express = require('express');
+const PORT = process.env.PORT || 3001;
+const app = express();
 
-// // Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Connect to database
-// const db = mysql.createConnection(
-//     {
-//         host: 'localhost',
-//         user: 'root',
-//         // TODO: Add MySQL password
-//         password: '',
-//         database: 'employeetracker_db'
-//     },
-//     console.log(`Connected to the employeetracker_db database.`)
-// );
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        //Add MySQL password
+        password: '',
+        database: 'employeetracker_db'
+    },
+    console.log(`Connected to the employeetracker_db database.`)
+);
 
 //inquirer menus and branching menus
 function mainMenuInq() {
@@ -62,15 +62,27 @@ function viewMenuInq() {
             (response) => {
                 switch (response.viewMenu) {
                     case 'View All Departments':
-                        console.log("dep")
+                        //add promise
+                        db.query('SELECT * FROM department ORDER BY id;', function (err, results) {
+                            console.log('\n')
+                            console.table(results);
+                            console.log('\n')
+                        });
+                        mainMenuInq();
                         break;
 
                     case 'View All Roles':
-                        console.log("role")
+                        db.query('SELECT roles.title,roles.id,department.dept_name,roles.salary FROM roles LEFT JOIN department ON department.id = roles.department_id ORDER BY roles.id ;', function (err, results) {
+                            console.table(results);
+                        });
+                        mainMenuInq();
                         break;
 
                     case 'View All Employees':
-                        console.log("emp")
+                        db.query('SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,', ',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;', function (err, results) {
+                            console.table(results);
+                        });
+                        mainMenuInq();
                         break;
                 }
             })

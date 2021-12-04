@@ -1,3 +1,16 @@
+//setting up db
+const mysql = require('mysql2');
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        // TODO: Add MySQL password
+        password: '',
+        database: 'employeetracker_db'
+    },
+    console.log(`Connected to the employeetracker_db database.`)
+);
+
 //menus
 const mainMenu = [{
     type: "list",
