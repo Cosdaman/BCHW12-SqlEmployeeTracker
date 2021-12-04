@@ -62,27 +62,17 @@ function viewMenuInq() {
             (response) => {
                 switch (response.viewMenu) {
                     case 'View All Departments':
-                        //add promise
-                        db.query('SELECT * FROM department ORDER BY id;', function (err, results) {
-                            console.log('\n')
-                            console.table(results);
-                            console.log('\n')
-                        });
-                        mainMenuInq();
+                        viewDept();
                         break;
 
                     case 'View All Roles':
-                        db.query('SELECT roles.title,roles.id,department.dept_name,roles.salary FROM roles LEFT JOIN department ON department.id = roles.department_id ORDER BY roles.id ;', function (err, results) {
-                            console.table(results);
-                        });
-                        mainMenuInq();
+                        viewRole();
                         break;
 
                     case 'View All Employees':
-                        db.query('SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,', ',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;', function (err, results) {
+                        db.query('SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,\',\',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;', function (err, results) {
                             console.table(results);
                         });
-                        mainMenuInq();
                         break;
                 }
             })
@@ -174,6 +164,20 @@ function addRoleInq() {
                     console.log("something else went wrong", error)
                 }
             })
+}
+
+async function viewDept() {
+    await db.promise().query('SELECT * FROM department ORDER BY id;').then((results) => {
+        console.table(results[0])
+    });
+    mainMenuInq();
+}
+
+async function viewRole() {
+    await db.promise().query('SELECT roles.title,roles.id,department.dept_name,roles.salary FROM roles LEFT JOIN department ON department.id = roles.department_id ORDER BY roles.id ;').then((results) => {
+        console.table(results[0])
+    });
+    mainMenuInq();
 }
 
 mainMenuInq();
