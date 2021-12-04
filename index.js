@@ -136,7 +136,9 @@ function addDeptInq() {
     inquirer.prompt(questionBank.addDept)
         .then(
             (response) => {
-                console.log(response)
+                console.log(response.name)
+                let departmentName = titleCase(response.name);
+                manipulateDB(`INSERT INTO department (dept_name) VALUES ("${departmentName}")`);
             })
         .catch(
             (error) => {
@@ -164,15 +166,6 @@ function addRoleInq() {
             })
 }
 
-
-
-async function viewEmployee() {
-    await db.promise().query().then((results) => {
-        console.table(results[0])
-    });
-    mainMenuInq();
-}
-
 async function viewDB(dbQuery) {
     await db.promise().query(dbQuery).then((results) => {
         console.table(results[0])
@@ -180,8 +173,20 @@ async function viewDB(dbQuery) {
     mainMenuInq();
 }
 
+async function manipulateDB(dbQuery) {
+    await db.promise().query(dbQuery).then(() => {
+        console.log("Manipulation attempted")
+    });
+    mainMenuInq();
+}
 
-
+function titleCase(string) {
+    let titleCased = string.toLowerCase();
+    titleCased = titleCased.split('');
+    titleCased[0] = titleCased[0].toUpperCase();
+    titleCased = titleCased.join('')
+    return titleCased;
+}
 
 
 mainMenuInq();
