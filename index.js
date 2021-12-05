@@ -98,7 +98,7 @@ function addMenuInq() {
                         break;
 
                     case 'Add An Employee':
-                        console.log("emp")
+                        addEmpInq();
                         break;
                 }
             })
@@ -136,7 +136,7 @@ function addDeptInq() {
     inquirer.prompt(questionBank.addDept)
         .then(
             (response) => {
-                console.log(response.name)
+                //convert to title case
                 let departmentName = titleCase(response.name);
                 manipulateDB(`INSERT INTO department (dept_name) VALUES ("${departmentName}")`);
             })
@@ -152,6 +152,22 @@ function addDeptInq() {
 
 function addRoleInq() {
     inquirer.prompt(questionBank.addRole)
+        .then(
+            (response) => {
+                departmentInq(response.name, response.salary);
+            })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+}
+
+function addEmpInq() {
+    inquirer.prompt(questionBank.addEmp)
         .then(
             (response) => {
                 console.log(response)
@@ -175,9 +191,42 @@ async function viewDB(dbQuery) {
 
 async function manipulateDB(dbQuery) {
     await db.promise().query(dbQuery).then(() => {
-        console.log("Manipulation attempted")
+        console.log("Query successful.")
     });
     mainMenuInq();
+}
+
+async function departmentInq(title, salary) {
+    let deptArr = [];
+    let reference;
+    //todo title case the title in insert
+    await db.promise().query('select * from department').then((results) => {
+        reference = results[0];
+        results[0].forEach(element => {
+            deptArr.push(element.dept_name)
+        });
+    });
+    inquirer.prompt(
+        [{
+            type: "list",
+            message: "Which department does this role belong to?",
+            name: "department",
+            choices: deptArr
+        }]
+    )
+        .then(
+            (response) => {
+                let id = reference.find(obj => obj.dept_name = response.department)
+                manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${title}", "${salary}", "${id.id}")`);
+            })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
 }
 
 function titleCase(string) {

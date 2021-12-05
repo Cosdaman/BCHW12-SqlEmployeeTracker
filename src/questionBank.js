@@ -1,16 +1,3 @@
-//setting up db
-const mysql = require('mysql2');
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        // TODO: Add MySQL password
-        password: '',
-        database: 'employeetracker_db'
-    },
-    console.log(`Connected to the employeetracker_db database.`)
-);
-
 //menus
 const mainMenu = [{
     type: "list",
@@ -57,22 +44,14 @@ const addRole = [{
     type: "input",
     message: "What is the salary?",
     name: "salary",
-    // validate(value) {
-    //     value = parseInt(value)
-    //     if (typeof value === 'number') {
-    //         return true;
-    //     }
-    //     else {
-    //         console.log(typeof value)
-    //         return 'Please enter a number';
-    //     }
-    // }
 },
-{
-    type: "input",
-    message: "What is the department of the role?",
-    name: "department"
-}]
+// {
+//     type: "list",
+//     message: "Which department does this role belong to?",
+//     name: "department",
+//     choices: ["Update An Employee"]
+// }
+]
 
 const addEmp = [{
     type: "input",
@@ -95,5 +74,13 @@ const addEmp = [{
     name: "manager"
 }]
 
+// async function prepDept() {
+//     await db.promise().query('SELECT * from department').then((results) => {
+//         console.log(results[0])
+//     });
+//     mainMenuInq();
+// }
+
+// prepDept();
 
 module.exports = { mainMenu, viewMenu, addMenu, updateMenu, addDept, addRole, addEmp }
