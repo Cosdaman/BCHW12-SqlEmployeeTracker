@@ -138,7 +138,6 @@ function addDeptInq() {
     inquirer.prompt(questionBank.addDept)
         .then(
             (response) => {
-                //convert to title case
                 let departmentName = titleCase(response.name);
                 manipulateDB(`INSERT INTO department (dept_name) VALUES ("${departmentName}")`);
             })
@@ -156,7 +155,7 @@ function addRoleInq() {
     inquirer.prompt(questionBank.addRole)
         .then(
             (response) => {
-                departmentInq(response.name, response.salary);
+                addRoleInqAdditional(response.name, response.salary);
             })
         .catch(
             (error) => {
@@ -172,7 +171,7 @@ function addEmpInq() {
     inquirer.prompt(questionBank.addEmp)
         .then(
             (response) => {
-                console.log(response)
+                roleInq(response.fName, response.lName)
             })
         .catch(
             (error) => {
@@ -198,7 +197,7 @@ async function manipulateDB(dbQuery) {
     mainMenuInq();
 }
 
-async function departmentInq(title, salary) {
+async function addRoleInqAdditional(title, salary) {
     let deptArr = [];
     let reference;
     //todo title case the title in insert
@@ -219,7 +218,7 @@ async function departmentInq(title, salary) {
         .then(
             (response) => {
                 let properTitle = titleCase(title)
-                let id = reference.find(obj => obj.dept_name = response.department)
+                let id = reference.find(obj => obj.dept_name == response.department)
                 manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${properTitle}", "${salary}", "${id.id}")`);
             })
         .catch(
@@ -232,6 +231,59 @@ async function departmentInq(title, salary) {
             })
 }
 
+async function roleInq(fName, lName) {
+    let rolesArr = [];
+    let rolesRef;
+    let managerArr = [];
+    let managerRef;
+    await db.promise().query('select id, title from roles order by id').then((results) => {
+        rolesRef = results[0];
+        rolesRef.forEach(element => {
+            rolesArr.push(element.title)
+        });
+    });
+    await db.promise().query('select id, CONCAT(first_name,\' \',last_name) AS fullName from employees').then((results) => {
+        managerRef = results[0];
+        results[0].forEach(element => {
+            managerArr.push(element.fullName)
+        });
+    });
+    inquirer.prompt(
+        [{
+            type: "list",
+            message: "What is the role of this employee?",
+            name: "role",
+            choices: rolesArr
+        },
+        {
+            type: "list",
+            message: "Who is the manager of this employee?",
+            name: "manager",
+            choices: managerArr
+        }
+        ]
+    )
+        .then(
+            (response) => {
+                let properfName = titleCase(fName)
+                let properlName = titleCase(lName)
+                let roleId = rolesRef.find(obj => obj.title == response.role)
+                let managerId = managerRef.find(obj => obj.fullName == response.manager)
+                console.log(roleId)
+                console.log(managerId)
+                manipulateDB(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES("${properfName}", "${properlName}", "${roleId.id}", "${managerId.id}")`);
+            })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+}
+
+//capitalizes the first letter of the string
 function titleCase(string) {
     let titleCased = string.toLowerCase();
     titleCased = titleCased.split('');

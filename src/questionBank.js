@@ -56,25 +56,6 @@ const addEmp = [{
     type: "input",
     message: "What is the employee's last name?",
     name: "lName"
-},
-{
-    type: "input",
-    message: "What is the employee's role?",
-    name: "role"
-},
-{
-    type: "input",
-    message: "Who is the employee's manager?",
-    name: "manager"
 }]
-
-// async function prepDept() {
-//     await db.promise().query('SELECT * from department').then((results) => {
-//         console.log(results[0])
-//     });
-//     mainMenuInq();
-// }
-
-// prepDept();
 
 module.exports = { mainMenu, viewMenu, addMenu, updateMenu, addDept, addRole, addEmp }
