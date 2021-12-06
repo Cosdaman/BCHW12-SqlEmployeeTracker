@@ -44,13 +44,7 @@ const addRole = [{
     type: "input",
     message: "What is the salary?",
     name: "salary",
-},
-// {
-//     type: "list",
-//     message: "Which department does this role belong to?",
-//     name: "department",
-//     choices: ["Update An Employee"]
-// }
+}
 ]
 
 const addEmp = [{

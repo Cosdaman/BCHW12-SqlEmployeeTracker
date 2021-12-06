@@ -43,6 +43,8 @@ function mainMenuInq() {
                         break;
 
                     case 'Quit':
+                        console.log("Goodbye.")
+                        process.kill(process.pid, 'SIGTERM')
                         break;
                 }
             })
@@ -216,8 +218,9 @@ async function departmentInq(title, salary) {
     )
         .then(
             (response) => {
+                let properTitle = titleCase(title)
                 let id = reference.find(obj => obj.dept_name = response.department)
-                manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${title}", "${salary}", "${id.id}")`);
+                manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${properTitle}", "${salary}", "${id.id}")`);
             })
         .catch(
             (error) => {
