@@ -171,7 +171,7 @@ function addEmpInq() {
     inquirer.prompt(questionBank.addEmp)
         .then(
             (response) => {
-                roleInq(response.fName, response.lName)
+                addEmpInqAdditional(response.fName, response.lName)
             })
         .catch(
             (error) => {
@@ -231,7 +231,7 @@ async function addRoleInqAdditional(title, salary) {
             })
 }
 
-async function roleInq(fName, lName) {
+async function addEmpInqAdditional(fName, lName) {
     let rolesArr = [];
     let rolesRef;
     let managerArr = [];
@@ -283,6 +283,13 @@ async function roleInq(fName, lName) {
             })
 }
 
+async function updateEmpRole() {
+    let empArr = [];
+    let empRef;
+    let rolesArr = [];
+    let rolesRef;
+}
+
 //capitalizes the first letter of the string
 function titleCase(string) {
     let titleCased = string.toLowerCase();
@@ -292,5 +299,6 @@ function titleCase(string) {
     return titleCased;
 }
 
+//implement dry code for finding ids 
 
 mainMenuInq();
