@@ -10,21 +10,21 @@ const viewMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'viewMenu',
-    choices: ["View All Departments", "View All Roles", "View All Employees","Back"]
+    choices: ["View All Departments", "View All Roles", "View All Employees", "Back"]
 }]
 
 const addMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'addMenu',
-    choices: ["Add A Department", "Add A Role", "Add An Employee"]
+    choices: ["Add A Department", "Add A Role", "Add An Employee", "Back"]
 }]
 
 const updateMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'updateMenu',
-    choices: ["Update An Employee",]
+    choices: ["Update Employee Role","Back"]
 }]
 
 //adding inqs

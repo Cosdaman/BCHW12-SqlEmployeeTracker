@@ -106,6 +106,10 @@ function addMenuInq() {
                     case 'Add An Employee':
                         addEmpInq();
                         break;
+
+                    case 'Back':
+                        mainMenuInq();
+                        break;
                 }
             })
         .catch(
@@ -123,8 +127,12 @@ function updateMenuInq() {
         .then(
             (response) => {
                 switch (response.updateMenu) {
-                    case 'Update An Employee':
+                    case 'Update Employee Role':
                         updateEmpRole();
+                        break;
+
+                    case 'Back':
+                        mainMenuInq();
                         break;
                 }
             })
@@ -305,13 +313,21 @@ async function updateEmpRole() {
     inquirer.prompt(
         [{
             type: "list",
-            message: "Which department does this role belong to?",
-            name: "department",
+            message: "Select an employee: ",
+            name: "employee",
             choices: empArr
+        },
+        {
+            type: "list",
+            message: "Select this employee's new role: ",
+            name: "role",
+            choices: rolesArr
         }]
     ).then(
         (response) => {
-            console.log(response)
+            let empID = getID(empRef, "fullName", response, "employee")
+            let roleID = getID(rolesRef, "title", response, "role")
+            manipulateDB(`UPDATE employees set role_id = ${roleID} where id = ${empID}`)
         })
         .catch(
             (error) => {
@@ -321,10 +337,6 @@ async function updateEmpRole() {
                     console.log("something else went wrong", error)
                 }
             })
-    console.log(empArr)
-    console.log(empRef)
-    console.log(rolesArr)
-    console.log(rolesRef)
 }
 
 //capitalizes the first letter of the string
