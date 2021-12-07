@@ -10,7 +10,7 @@ const viewMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'viewMenu',
-    choices: ["View All Departments", "View All Roles", "View All Employees","View Employee By Manager", "Back"]
+    choices: ["View All Departments", "View All Roles", "View All Employees", "View Employee By Manager", "View Employees By Department", "Back"]
 }]
 
 const addMenu = [{
@@ -24,7 +24,7 @@ const updateMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'updateMenu',
-    choices: ["Update Employee Role","Update Employee Manager","Back"]
+    choices: ["Update Employee Role", "Update Employee Manager", "Back"]
 }]
 
 //adding inqs

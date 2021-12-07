@@ -79,6 +79,10 @@ function viewMenuInq() {
                         viewEmpByManager();
                         break;
 
+                    case 'View Employees By Department':
+                        viewEmpByDept();
+                        break;
+
                     case 'Back':
                         mainMenuInq();
                         break;
@@ -427,18 +431,16 @@ async function viewEmpByDept() {
         });
     });
     inquirer.prompt(
-        [
-            {
-                type: "list",
-                message: "Select a department: ",
-                name: "department",
-                choices: deptArr
-            }]
+        [{
+            type: "list",
+            message: "Select a department: ",
+            name: "department",
+            choices: deptArr
+        }]
     ).then(
         (response) => {
             let deptID = getID(deptRef, "dept_name", response, "department")
-            console.log(deptID);
-            // viewDB(`SELECT a.id, a.first_name,a.last_name, CONCAT(b.last_name," ",b.first_name) AS Manager FROM employees a  left JOIN employees b ON a.manager_id = b.id where a.manager_id= ${manID} ORDER BY a.id;`)
+            viewDB(`SELECT employees.id,first_name,last_name, roles.title,department.dept_name FROM employees  JOIN roles ON roles.id = employees.role_id JOIN department ON roles.department_id = department.id where department.id=${deptID} ORDER BY employees.id;`)
         })
         .catch(
             (error) => {
