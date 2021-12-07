@@ -9,6 +9,7 @@ This is a command line based employee tracker that is built using NodeJS and MyS
 - NodeJS
 - MySQL
 - Inquirer
+- console.table
 
 ## Contact Information  
 
