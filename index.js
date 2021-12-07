@@ -75,6 +75,10 @@ function viewMenuInq() {
                         viewDB(`SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,\',\',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;`)
                         break;
 
+                    case 'View Employee By Manager':
+                        viewEmpByManager();
+                        break;
+
                     case 'Back':
                         mainMenuInq();
                         break;
@@ -129,6 +133,10 @@ function updateMenuInq() {
                 switch (response.updateMenu) {
                     case 'Update Employee Role':
                         updateEmpRole();
+                        break;
+
+                    case 'Update Employee Manager':
+                        updateEmpManager();
                         break;
 
                     case 'Back':
@@ -328,6 +336,109 @@ async function updateEmpRole() {
             let empID = getID(empRef, "fullName", response, "employee")
             let roleID = getID(rolesRef, "title", response, "role")
             manipulateDB(`UPDATE employees set role_id = ${roleID} where id = ${empID}`)
+        })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+}
+
+async function updateEmpManager() {
+    let empArr = [];
+    let empRef;
+    await db.promise().query('select id, CONCAT(first_name,\' \',last_name) AS fullName from employees').then((results) => {
+        empRef = results[0];
+        results[0].forEach(element => {
+            empArr.push(element.fullName)
+        });
+    });
+    inquirer.prompt(
+        [{
+            type: "list",
+            message: "Select an employee: ",
+            name: "employee",
+            choices: empArr
+        },
+        {
+            type: "list",
+            message: "Select this employee's new manager: ",
+            name: "manager",
+            choices: empArr
+        }]
+    ).then(
+        (response) => {
+            let empID = getID(empRef, "fullName", response, "employee")
+            let manID = getID(empRef, "fullName", response, "manager")
+            manipulateDB(`UPDATE employees set manager_id = ${manID} where id = ${empID}`)
+        })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+}
+
+async function viewEmpByManager() {
+    let empArr = [];
+    let empRef;
+    await db.promise().query('select id, CONCAT(first_name,\' \',last_name) AS fullName from employees').then((results) => {
+        empRef = results[0];
+        results[0].forEach(element => {
+            empArr.push(element.fullName)
+        });
+    });
+    inquirer.prompt(
+        [
+            {
+                type: "list",
+                message: "Select a manager: ",
+                name: "manager",
+                choices: empArr
+            }]
+    ).then(
+        (response) => {
+            let manID = getID(empRef, "fullName", response, "manager")
+            viewDB(`SELECT a.id, a.first_name,a.last_name, CONCAT(b.last_name," ",b.first_name) AS Manager FROM employees a  left JOIN employees b ON a.manager_id = b.id where a.manager_id= ${manID} ORDER BY a.id;`)
+        })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+}
+
+async function viewEmpByDept() {
+    let deptArr = [];
+    let deptRef;
+    await db.promise().query('select * from department').then((results) => {
+        deptRef = results[0];
+        results[0].forEach(element => {
+            deptArr.push(element.dept_name)
+        });
+    });
+    inquirer.prompt(
+        [
+            {
+                type: "list",
+                message: "Select a department: ",
+                name: "department",
+                choices: deptArr
+            }]
+    ).then(
+        (response) => {
+            let deptID = getID(deptRef, "dept_name", response, "department")
+            console.log(deptID);
+            // viewDB(`SELECT a.id, a.first_name,a.last_name, CONCAT(b.last_name," ",b.first_name) AS Manager FROM employees a  left JOIN employees b ON a.manager_id = b.id where a.manager_id= ${manID} ORDER BY a.id;`)
         })
         .catch(
             (error) => {
