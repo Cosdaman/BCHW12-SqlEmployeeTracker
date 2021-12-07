@@ -17,4 +17,9 @@ Feel free to reach out, you can reach me through:
 - Twitter: @Cosdaman  
 - Email: Cosdaguy@gmail.com  
 
-## Screenshot/s  
+## Walkthrough Video:
+
+Raw File:  
+https://github.com/Cosdaman/BCHW12-SqlEmployeeTracker/blob/main/Employee%20Tracker%20Walkthrough%20Video.webm
+Youtube Link:  
+https://youtu.be/58cvDflPzU8
