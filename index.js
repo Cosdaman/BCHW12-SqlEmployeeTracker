@@ -74,6 +74,10 @@ function viewMenuInq() {
                     case 'View All Employees':
                         viewDB(`SELECT a.id, a.first_name,a.last_name, roles.title,department.dept_name,roles.salary, CONCAT(b.last_name,\',\',b.first_name) AS Manager FROM employees a JOIN roles ON roles.id = a.role_id JOIN department ON roles.department_id = department.id left JOIN employees b ON a.manager_id = b.id ORDER BY a.id;`)
                         break;
+
+                    case 'Back':
+                        mainMenuInq();
+                        break;
                 }
             })
         .catch(
@@ -120,7 +124,7 @@ function updateMenuInq() {
             (response) => {
                 switch (response.updateMenu) {
                     case 'Update An Employee':
-                        console.log("emp")
+                        updateEmpRole();
                         break;
                 }
             })
@@ -218,8 +222,8 @@ async function addRoleInqAdditional(title, salary) {
         .then(
             (response) => {
                 let properTitle = titleCase(title)
-                let id = reference.find(obj => obj.dept_name == response.department)
-                manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${properTitle}", "${salary}", "${id.id}")`);
+                let id = getID(reference, "dept_name", response, "department");
+                manipulateDB(`INSERT INTO roles (title, salary, department_id) VALUES("${properTitle}", "${salary}", "${id}")`);
             })
         .catch(
             (error) => {
@@ -267,11 +271,9 @@ async function addEmpInqAdditional(fName, lName) {
             (response) => {
                 let properfName = titleCase(fName)
                 let properlName = titleCase(lName)
-                let roleId = rolesRef.find(obj => obj.title == response.role)
-                let managerId = managerRef.find(obj => obj.fullName == response.manager)
-                console.log(roleId)
-                console.log(managerId)
-                manipulateDB(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES("${properfName}", "${properlName}", "${roleId.id}", "${managerId.id}")`);
+                let roleId = getID(rolesRef, "title", response, "role")
+                let managerId = getID(managerRef, "fullName", response, "manager")
+                manipulateDB(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES("${properfName}", "${properlName}", "${roleId}", "${managerId}")`);
             })
         .catch(
             (error) => {
@@ -288,6 +290,41 @@ async function updateEmpRole() {
     let empRef;
     let rolesArr = [];
     let rolesRef;
+    await db.promise().query('select id, title from roles order by id').then((results) => {
+        rolesRef = results[0];
+        rolesRef.forEach(element => {
+            rolesArr.push(element.title)
+        });
+    });
+    await db.promise().query('select id, CONCAT(first_name,\' \',last_name) AS fullName from employees').then((results) => {
+        empRef = results[0];
+        results[0].forEach(element => {
+            empArr.push(element.fullName)
+        });
+    });
+    inquirer.prompt(
+        [{
+            type: "list",
+            message: "Which department does this role belong to?",
+            name: "department",
+            choices: empArr
+        }]
+    ).then(
+        (response) => {
+            console.log(response)
+        })
+        .catch(
+            (error) => {
+                if (error.isTtyError) {
+                    console.log("error", error)
+                } else {
+                    console.log("something else went wrong", error)
+                }
+            })
+    console.log(empArr)
+    console.log(empRef)
+    console.log(rolesArr)
+    console.log(rolesRef)
 }
 
 //capitalizes the first letter of the string
@@ -300,5 +337,9 @@ function titleCase(string) {
 }
 
 //implement dry code for finding ids 
+function getID(reference, refCol, response, resCol) {
+    let id = (reference.find(obj => obj[refCol] == response[resCol])).id
+    return id;
+}
 
 mainMenuInq();

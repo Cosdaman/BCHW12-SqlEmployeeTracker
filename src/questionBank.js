@@ -10,7 +10,7 @@ const viewMenu = [{
     type: "list",
     message: "Select an option from the choices below: ",
     name: 'viewMenu',
-    choices: ["View All Departments", "View All Roles", "View All Employees"]
+    choices: ["View All Departments", "View All Roles", "View All Employees","Back"]
 }]
 
 const addMenu = [{
